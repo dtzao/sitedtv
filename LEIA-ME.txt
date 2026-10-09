@@ -1,0 +1,79 @@
+DTV — Site completo (3 páginas)
+================================
+
+ARQUIVOS
+--------
+- index.html      → Página inicial
+- catalogo.html   → Vitrine de imagens (25 espaços)
+- suporte.html    → Página de suporte com 5 cards grandes
+- imagens/        → Pasta com as imagens
+  ├── logo-dtv.png
+  ├── banner-dtv.png
+  └── captura-01.png
+
+COMO TESTAR
+-----------
+1. Extraia o ZIP
+2. Abra o arquivo index.html no navegador (dois cliques)
+3. Navegue entre as páginas pelo menu no topo
+
+TROCAR O NÚMERO DO WHATSAPP
+---------------------------
+Em TODOS os arquivos HTML procure por:
+  5511999999999
+
+Substitua pelo seu número completo:
+  código do país + DDD + número (somente números)
+Exemplo brasileiro: 5511988887777
+
+Locais onde aparece:
+- index.html (botão e botão flutuante)
+- catalogo.html (botão e botão flutuante)
+- suporte.html (botão flutuante + variável no JavaScript)
+
+Na página suporte.html existe também esta linha no final do arquivo:
+  const WHATSAPP_NUMERO = '5511999999999';
+Troque ali também!
+
+PÁGINA DE SUPORTE (suporte.html)
+--------------------------------
+- Tem 5 cards grandes
+- Ao clicar em um card abre um formulário
+- O cliente pode preencher (opcional):
+  • Marca da TV
+  • MAC do Dream TV
+  • Tipo de dispositivo (Caixinha, Fire Stick, etc.)
+- Ao clicar em "Enviar no WhatsApp" abre o WhatsApp
+  com a mensagem pronta + os dados preenchidos
+- Se deixar os campos em branco, a mensagem vai só com
+  o texto do card escolhido
+
+COMO COLOCAR MAIS IMAGENS NA VITRINE
+-----------------------------------
+1. Coloque o arquivo na pasta imagens
+   (use nomes simples: filme-01.jpg, serie-02.png)
+2. Abra catalogo.html em um editor de texto
+3. Encontre um card com placeholder e substitua:
+
+   <div class="placeholder"><b>＋</b>Imagem XX<br>Adicione seu arquivo</div>
+
+   por:
+
+   <img src="imagens/filme-01.jpg" alt="Descrição da imagem">
+
+4. Salve o arquivo
+
+PUBLICAR NO GITHUB PAGES
+------------------------
+1. Crie um repositório no GitHub
+2. Envie todos os arquivos (index.html, catalogo.html,
+   suporte.html e a pasta imagens)
+3. Vá em Settings → Pages → Source: Deploy from a branch
+4. Escolha a branch main e a pasta / (root)
+5. Aguarde alguns minutos e acesse o link gerado
+
+IMPORTANTE
+----------
+- Mantenha os 3 HTMLs e a pasta imagens juntos
+- Este é um site estático (não precisa de servidor PHP ou banco)
+- Funciona perfeitamente no GitHub Pages, Netlify, Vercel, etc.

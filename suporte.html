@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070914">
+  <title>Suporte | DTV — Qualidade para você</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070914;
+      --panel: #10162a;
+      --gold: #f7c94b;
+      --gold2: #ffed9a;
+      --text: #f8f7f2;
+      --muted: #c4c7d4;
+      --card: rgba(16, 22, 42, 0.9);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      background: radial-gradient(ellipse at top, #18213d 0%, var(--bg) 58%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap { width: min(1100px, 92%); margin: auto; }
+
+    header {
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(247, 201, 75, 0.22);
+      position: sticky;
+      top: 0;
+      background: rgba(7, 9, 20, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    nav a:hover, nav a.active {
+      color: var(--gold);
+      background: rgba(247, 201, 75, 0.1);
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 4.5vw, 3rem);
+      margin: 40px 0 10px;
+      text-align: center;
+      font-weight: 900;
+    }
+    h1 span { color: var(--gold); }
+    .intro {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 40px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+      padding-bottom: 60px;
+    }
+    .support-card {
+      background: var(--card);
+      border: 1px solid rgba(247, 201, 75, 0.22);
+      border-radius: 18px;
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+    .support-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .support-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(247, 201, 75, 0.55);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+    .support-card:hover::before { opacity: 1; }
+    .card-icon { font-size: 2.4rem; line-height: 1; }
+    .support-card h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .support-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      flex-grow: 1;
+    }
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--gold);
+      margin-top: 6px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: linear-gradient(180deg, #121a30, #0a0e1c);
+      border: 1px solid rgba(247, 201, 75, 0.35);
+      border-radius: 20px;
+      width: min(480px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px 26px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .modal-header h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1.3;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.6rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 0 0 12px;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal-desc {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gold2);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: rgba(247, 201, 75, 0.5);
+    }
+    .form-group input::placeholder { color: #6b7280; }
+
+    /* CORREÇÃO: opções do select em preto para ficarem legíveis */
+    .form-group select option {
+      background: #ffffff;
+      color: #111111;
+    }
+
+    .form-hint {
+      font-size: 0.78rem;
+      color: #7a8094;
+      margin-top: 5px;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .btn-wa {
+      color: #fff;
+      background: #25D366;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+    }
+    .btn-cancel {
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    footer {
+      border-top: 1px solid rgba(247, 201, 75, 0.18);
+      padding: 22px 0;
+      color: #9da3b6;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .float-wa {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 58px;
+      height: 58px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+      z-index: 90;
+      transition: transform 0.2s;
+      text-decoration: none;
+    }
+    .float-wa:hover { transform: scale(1.08); }
+    .float-wa svg { width: 30px; height: 30px; fill: #fff; }
+
+    @media (max-width: 560px) {
+      nav { width: 100%; }
+      .support-card { min-height: 200px; padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap top">
+      <a class="brand" href="index.html">DTV | QUALIDADE PARA VOCÊ</a>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="catalogo.html">CATALAGO/MAIS ASSISTIDOS</a>
+        <a href="suporte.html" class="active">Suporte</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1>Precisa de <span>ajuda</span>?</h1>
+    <p class="intro">
+      Clique no card do serviço que você precisa. Você poderá preencher alguns dados opcionais
+      e enviar uma mensagem pronta direto no nosso WhatsApp.
+    </p>
+
+    <div class="support-grid">
+      <div class="support-card" data-titulo="Dream TV" data-msg="Preciso de auxílio com o app Dream TV.">
+        <div class="card-icon">📺</div>
+        <h3>Dream TV</h3>
+        <p>Ajuda com instalação, ativação, lista, MAC ou qualquer dúvida sobre o app Dream TV.</p>
+        <div class="card-action">Solicitar ajuda →</div>
+      </div>
+
+      <div class="support-card" data-titulo="Fire Stick / Fire TV" data-msg="Preciso de auxílio para configurar ou usar no Fire Stick / Fire TV.">
+        <div class="card-icon">🔥</div>
+        <h3>Fire Stick / Fire TV</h3>
+        <p>Configuração, instalação de apps, problemas de conexão ou dúvidas sobre Amazon Fire Stick e Fire TV.</p>
+        <div class="card-action">Solicitar ajuda →</div>
+      </div>
+
+      <div class="support-card" data-titulo="TV Box / Caixinha" data-msg="Preciso de auxílio com minha TV Box / Caixinha.">
+        <div class="card-icon">📦</div>
+        <h3>TV Box / Caixinha</h3>
+        <p>Configuração, apps, atualizações ou qualquer problema com sua caixinha / TV Box Android.</p>
+        <div class="card-action">Solicitar ajuda →</div>
+      </div>
+
+      <div class="support-card" data-titulo="Instalação de Apps" data-msg="Preciso de ajuda para instalar apps na minha TV / dispositivo.">
+        <div class="card-icon">📲</div>
+        <h3>Instalação de Apps</h3>
+        <p>Ajuda para instalar, atualizar ou configurar aplicativos de streaming na sua TV ou dispositivo.</p>
+        <div class="card-action">Solicitar ajuda →</div>
+      </div>
+
+      <div class="support-card" data-titulo="Outros / Dúvidas Gerais" data-msg="Preciso de auxílio / tenho uma dúvida geral.">
+        <div class="card-icon">💬</div>
+        <h3>Outros / Dúvidas Gerais</h3>
+        <p>Qualquer outra dúvida, problema de conexão, buffer, ativação ou assunto que não esteja nos cards acima.</p>
+        <div class="card-action">Solicitar ajuda →</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">© 2026 DTV — Qualidade para você.</div>
+  </footer>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-titulo">Solicitar ajuda</h2>
+        <button class="modal-close" id="modal-close" aria-label="Fechar">&times;</button>
+      </div>
+      <p class="modal-desc">Preencha os campos abaixo se quiser (são opcionais). Depois clique em enviar para abrir o WhatsApp com a mensagem pronta.</p>
+
+      <form id="support-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="marca-tv">Minha TV é da marca:</label>
+          <input type="text" id="marca-tv" placeholder="Ex: Samsung, LG, TCL, Philips...">
+          <div class="form-hint">Opcional</div>
+        </div>
+
+        <div class="form-group">
+          <label for="mac">Uso o Dream TV e meu MAC é:</label>
+          <input type="text" id="mac" placeholder="Ex: AA:BB:CC:DD:EE:FF">
+          <div class="form-hint">Opcional — deixe em branco se não souber</div>
+        </div>
+
+        <div class="form-group">
+          <label for="dispositivo">Eu uso:</label>
+          <select id="dispositivo">
+            <option value="">— Selecione (opcional) —</option>
+            <option value="Caixinha / TV Box">Caixinha / TV Box</option>
+            <option value="Fire Stick">Fire Stick</option>
+            <option value="Fire TV">Fire TV</option>
+            <option value="Smart TV">Smart TV</option>
+            <option value="Celular / Tablet">Celular / Tablet</option>
+            <option value="Computador">Computador</option>
+            <option value="Outro">Outro</option>
+          </select>
+          <div class="form-hint">Opcional</div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-wa" id="btn-enviar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Enviar no WhatsApp
+          </button>
+          <button type="button" class="btn btn-cancel" id="btn-cancelar">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <a class="float-wa" href="https://wa.me/5511999999999" target="_blank" rel="noopener" title="WhatsApp" aria-label="Abrir WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script>
+    // ====== CONFIGURAÇÃO DO WHATSAPP ======
+    // Troque pelo seu número: código do país + DDD + número (somente números)
+    const WHATSAPP_NUMERO = '5511999999999';
+    // ======================================
+
+    const modal = document.getElementById('modal');
+    const modalTitulo = document.getElementById('modal-titulo');
+    const btnEnviar = document.getElementById('btn-enviar');
+    const btnCancelar = document.getElementById('btn-cancelar');
+    const modalClose = document.getElementById('modal-close');
+    let mensagemBase = '';
+
+    document.querySelectorAll('.support-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const titulo = card.dataset.titulo;
+        mensagemBase = card.dataset.msg;
+        modalTitulo.textContent = titulo;
+        document.getElementById('marca-tv').value = '';
+        document.getElementById('mac').value = '';
+        document.getElementById('dispositivo').value = '';
+        modal.classList.add('open');
+      });
+    });
+
+    function fecharModal() {
+      modal.classList.remove('open');
+    }
+    btnCancelar.addEventListener('click', fecharModal);
+    modalClose.addEventListener('click', fecharModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) fecharModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') fecharModal();
+    });
+
+    btnEnviar.addEventListener('click', () => {
+      const marca = document.getElementById('marca-tv').value.trim();
+      const mac = document.getElementById('mac').value.trim();
+      const dispositivo = document.getElementById('dispositivo').value;
+
+      let texto = mensagemBase;
+      if (marca) texto += `\n\nMinha TV é da marca: ${marca}`;
+      if (mac) texto += `\nUso o Dream TV e meu MAC é: ${mac}`;
+      if (dispositivo) texto += `\nEu uso: ${dispositivo}`;
+
+      const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`;
+      window.open(url, '_blank');
+      fecharModal();
+    });
+  </script>
+</body>
+</html>
