@@ -462,6 +462,7 @@
         <a href="index.html" class="active">Início</a>
         <a href="catalogo.html">CATALAGO/MAIS ASSISTIDOS</a>
         <a href="suporte.html">Suporte</a>
+        <a href="#" class="nav-contrate" id="nav-contrate">Contrate</a>
       </nav>
     </div>
   </header>
@@ -494,7 +495,7 @@
           <div class="beneficio-oferta"><span class="check">✓</span><span>Compatível com TV, celular e computador, usando aplicativos compatíveis.</span></div>
         </div>
         <p class="destaque-fechamento">VOCÊ EXPERIMENTA. VOCÊ DECIDE.</p>
-        <a class="btn primary" href="https://wa.me/5511958357774?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20os%20planos%20da%20DTV." target="_blank" rel="noopener">🔥 Quero contratar pelo WhatsApp</a>
+        <button class="btn primary" type="button" id="abrir-contratacao">🔥 Quero contratar pelo WhatsApp</button>
       </div>
     </div>
 
@@ -544,6 +545,37 @@
   <footer>
     <div class="wrap">© 2026 DTV — Qualidade para você.</div>
   </footer>
+
+  <div class="modal-overlay" id="modal-contratacao" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-contratacao">
+      <div class="modal-header">
+        <h2 id="titulo-contratacao">Vamos começar sua contratação!</h2>
+        <button class="modal-close" id="fechar-contratacao" aria-label="Fechar">&times;</button>
+      </div>
+      <p class="modal-desc">Responda rapidinho para nossa equipe orientar você. Depois, é só enviar pelo WhatsApp.</p>
+      <form id="form-contratacao" onsubmit="return false;">
+        <div class="form-group">
+          <label for="contrata-dispositivo">Onde pretende usar?</label>
+          <select id="contrata-dispositivo" required>
+            <option value="">Selecione seu dispositivo</option>
+            <option value="TV / Smart TV">TV / Smart TV</option>
+            <option value="Celular Android">Celular (Android)</option>
+            <option value="Celular iOS (iPhone)">Celular (iOS / iPhone)</option>
+            <option value="Computador">Computador</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupo-marca-tv">
+          <label for="contrata-marca-tv">Qual é a marca da sua TV?</label>
+          <input type="text" id="contrata-marca-tv" placeholder="Ex.: Samsung, LG, TCL, Philips...">
+          <div class="form-hint">Se pretende usar na TV, informe a marca. Para outros dispositivos, pode deixar em branco.</div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-wa" id="enviar-contratacao">Enviar respostas pelo WhatsApp</button>
+          <button type="button" class="btn btn-cancel" id="cancelar-contratacao">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
@@ -596,6 +628,65 @@
   <script>
     const WHATSAPP_NUMERO = '5511958357774';
 
+    // Fluxo de contratação: menu superior e botão da oferta abrem o mesmo formulário.
+    const modalContratacao = document.getElementById('modal-contratacao');
+    const dispositivoContratacao = document.getElementById('contrata-dispositivo');
+    const marcaContratacao = document.getElementById('contrata-marca-tv');
+    const grupoMarcaTV = document.getElementById('grupo-marca-tv');
+    const abrirContratacao = () => {
+      modalContratacao.classList.add('open');
+      modalContratacao.setAttribute('aria-hidden', 'false');
+      dispositivoContratacao.value = '';
+      marcaContratacao.value = '';
+      dispositivoContratacao.focus();
+    };
+    const fecharContratacao = () => {
+      modalContratacao.classList.remove('open');
+      modalContratacao.setAttribute('aria-hidden', 'true');
+    };
+    document.getElementById('nav-contrate').addEventListener('click', (e) => {
+      e.preventDefault();
+      abrirContratacao();
+    });
+    document.getElementById('abrir-contratacao').addEventListener('click', abrirContratacao);
+    document.getElementById('fechar-contratacao').addEventListener('click', fecharContratacao);
+    document.getElementById('cancelar-contratacao').addEventListener('click', fecharContratacao);
+    modalContratacao.addEventListener('click', (e) => {
+      if (e.target === modalContratacao) fecharContratacao();
+    });
+    dispositivoContratacao.addEventListener('change', () => {
+      const usandoTV = dispositivoContratacao.value === 'TV / Smart TV';
+      marcaContratacao.required = usandoTV;
+      grupoMarcaTV.querySelector('label').textContent = usandoTV
+        ? 'Qual é a marca da sua TV? (obrigatório)'
+        : 'Qual é a marca da sua TV?';
+      marcaContratacao.placeholder = usandoTV
+        ? 'Informe a marca da sua TV'
+        : 'Opcional se não for usar na TV';
+    });
+    document.getElementById('enviar-contratacao').addEventListener('click', () => {
+      const dispositivo = dispositivoContratacao.value;
+      const marca = marcaContratacao.value.trim();
+      if (!dispositivo) {
+        dispositivoContratacao.reportValidity();
+        dispositivoContratacao.focus();
+        return;
+      }
+      if (dispositivo === 'TV / Smart TV' && !marca) {
+        marcaContratacao.setCustomValidity('Informe a marca da sua TV.');
+        marcaContratacao.reportValidity();
+        marcaContratacao.focus();
+        marcaContratacao.setCustomValidity('');
+        return;
+      }
+      let texto = 'Olá! Quero contratar a DTV e gostaria de orientação para começar.\n';
+      texto += `Pretendo usar em: ${dispositivo}.`;
+      if (marca) texto += `\nMarca da TV: ${marca}.`;
+      texto += '\nPoderiam me explicar como funciona a contratação mensal?';
+      window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+      fecharContratacao();
+    });
+
     const modal = document.getElementById('modal');
     const modalTitulo = document.getElementById('modal-titulo');
     const btnEnviar = document.getElementById('btn-enviar');
@@ -618,7 +709,7 @@
     btnCancelar.addEventListener('click', fecharModal);
     modalClose.addEventListener('click', fecharModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fecharModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { fecharModal(); fecharContratacao(); } });
 
     btnEnviar.addEventListener('click', () => {
       const marca = document.getElementById('marca-tv').value.trim();
